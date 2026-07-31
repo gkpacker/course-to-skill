@@ -1,0 +1,4 @@
+interface:
+  display_name: "Course to Skill"
+  short_description: "Turn courses into auditable Codex skills"
+  default_prompt: "Use $course-to-skill to initialize an auditable private or public-safe course skill repository."
