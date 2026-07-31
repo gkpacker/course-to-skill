@@ -37,6 +37,46 @@ The generated project separates:
 - Validators and tests for generated references and repository policy.
 - A provider adapter contract that keeps authentication outside the generic pipeline.
 
+## Use it by asking Codex
+
+The recommended interface is a conversation with Codex. You do not need to run the pipeline commands by hand unless you want to inspect or customize them.
+
+First, ask Codex to install the operator skill:
+
+> Install the `course-to-skill` skill from `gkpacker/course-to-skill`, path `skills/course-to-skill`.
+
+Start a private course project with a prompt like:
+
+> Use `$course-to-skill` to turn a course I am authorized to access into an auditable knowledge skill. The course is at `COURSE_URL`. Create a separate private repository, inventory the course before processing lessons, keep all media local and untracked, and do not publish or install the generated skill yet.
+
+If the course requires an authenticated browser session, log in yourself and then tell the agent:
+
+> I am logged in. Continue with `$course-to-skill`. Process the first representative lesson, show me the reviewed reference and validation result, and use it to calibrate the model routing before scaling to the rest of the course.
+
+For an existing project, point Codex at the repository instead of starting over:
+
+> Use `$course-to-skill` in `PATH_TO_COURSE_REPOSITORY`. Read its manifest and current status, validate the existing artifacts, then continue from the next incomplete lesson. Preserve raw ASR and do not redo validated lessons.
+
+Other useful requests:
+
+- **Audit quality:** “Audit the reviewed transcripts and generated references in `PATH`, report unsupported claims and missing numeric evidence, and do not rewrite them until I approve.”
+- **Resume at scale:** “Continue the remaining lessons. Keep authenticated media capture serial, then parallelize independent review and sampled audit work where safe.”
+- **Create a public-safe template:** “Create only a public-safe scaffold for this workflow. Do not include transcripts, generated references, provider adapters, course URLs, or private fixtures.”
+- **Package the result:** “Package only validated references into the generated knowledge skill, update its problem-to-reference index, and show me how to install it. Do not publish it.”
+
+When following these prompts, the agent should:
+
+1. Read the `course-to-skill` skill and the target repository instructions before acting.
+2. Confirm that the user is authorized to process the material and default the generated repository to private.
+3. Inventory lessons and assign stable IDs before capturing media.
+4. Keep course/provider-specific code and authenticated browser work in the private course repository, never in this generic repository.
+5. Preserve raw ASR, produce a separate reviewed transcript, and distill only from the reviewed transcript.
+6. Validate every reference and use a strong-model sampled audit before scaling a new routing configuration.
+7. Keep media, credentials, cookies, signed URLs, and transient browser state out of Git and process arguments.
+8. Report completed lessons, validation results, open uncertainty markers, and any login or access blocker.
+
+The first representative lesson is intentionally a calibration run. After it passes both structural and semantic review, Codex can process additional lessons in batches without weakening the evidence trail.
+
 ## Requirements
 
 - Python 3.11 or newer.
@@ -156,11 +196,19 @@ python3 skills/course-to-skill/scripts/init_course_repo.py \
 
 Before creating a public remote, confirm redistribution rights, replace private fixtures, scan for secrets, and choose a code license. Follow the complete [repository visibility checklist](skills/course-to-skill/references/repository-visibility.md).
 
-## Use with Codex
+## Manual Codex installation
 
-The repository itself can be developed and tested without installing the skill. If you choose to use it as a personal Codex skill later, install or symlink only the `skills/course-to-skill/` directory into your Codex skills directory, then invoke it as `$course-to-skill`.
+If you prefer the terminal, install only the operator skill directory:
 
-This repository does not perform that installation automatically, and generating a course repository does not publish its resulting knowledge skill.
+```bash
+python3 ~/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+  --repo gkpacker/course-to-skill \
+  --path skills/course-to-skill
+```
+
+The skill is available from the next Codex turn after installation. The repository can also be developed and tested without installing the skill.
+
+Installing this operator skill does not install a generated course skill. Creating a course repository also does not publish its contents or create a GitHub remote; those remain separate, explicit actions.
 
 ## Validation
 
