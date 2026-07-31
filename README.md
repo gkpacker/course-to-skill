@@ -32,6 +32,7 @@ The generated project separates:
 - A Codex skill for operating the pipeline: [`skills/course-to-skill`](skills/course-to-skill/).
 - A private/public-aware course repository initializer.
 - Deterministic local audio normalization and Whisper transcription scripts.
+- A capability-tier routing policy that keeps media, ASR, and deterministic validation local while reserving model use for the work that benefits from it.
 - An evidence-first lesson template with timestamps, uncertainty markers, numeric checks, and clearly labeled derived applications.
 - Validators and tests for generated references and repository policy.
 - A provider adapter contract that keeps authentication outside the generic pipeline.
@@ -122,6 +123,12 @@ python3 skills/course-to-skill/scripts/validate_reference.py \
 ```
 
 Only validated references should be added to the skill index. The detailed workflow and review thresholds are documented in [pipeline.md](skills/course-to-skill/references/pipeline.md) and [quality-gates.md](skills/course-to-skill/references/quality-gates.md).
+
+## Model routing and calibration
+
+The generic policy deliberately uses capability tiers instead of model names. Media handling, ASR, and structural validation run locally and deterministically. An economical tier may perform high-volume mechanical cleanup; a balanced tier handles evidence-aware review and distillation; a strong tier is reserved for sampled audits, exceptions, and final synthesis. Models never override deterministic validation or semantic quality gates.
+
+Before changing a routing configuration or scaling it, run the documented A/B calibration protocol: change one variable at a time, evaluate the same representative sample, and require both structural and semantic gates to pass without a material fidelity regression. See [pipeline routing](skills/course-to-skill/references/pipeline.md) and [quality gates and calibration](skills/course-to-skill/references/quality-gates.md).
 
 ## Private and public repositories
 

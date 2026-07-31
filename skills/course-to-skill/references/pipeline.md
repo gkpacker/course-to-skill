@@ -29,6 +29,20 @@ Obter mídia somente por acesso autorizado. O adaptador pode resolver uma URL te
 
 Executar Whisper localmente com timestamps. Preservar o JSON bruto antes de gerar Markdown e rejeitar segmentos vazios, duplicados ou iniciados no fim do arquivo.
 
+## Roteamento por capacidade
+
+O pipeline usa papéis de capacidade, não nomes ou fornecedores específicos de modelos. Registrar no artefato de execução o papel usado, a versão/configuração disponível, o prompt ou regra aplicável, a entrada, a saída e o resultado dos gates. Não registrar segredos, mídia ou URLs temporárias.
+
+| Etapa | Execução e papel permitido | Limite operacional |
+| --- | --- | --- |
+| Resolução de mídia, extração de áudio e ASR | Ferramentas locais e determinísticas | Não enviar mídia, áudio bruto ou credenciais a um modelo remoto para esta etapa. |
+| Validação estrutural, timestamps, números, duplicação e placeholders | Scripts locais e determinísticos | O resultado do validador é obrigatório e não pode ser anulado por um modelo. |
+| Limpeza mecânica em alto volume | Tier econômico | Formatação, segmentação, remoção de duplicação já detectada e normalização que não altere sentido. Não decidir fatos, preencher lacunas ou remover incertezas. |
+| Revisão da transcrição e destilação | Tier balanceado | Comparar com a evidência disponível, preservar marcadores de incerteza, produzir referências com timestamps e separar conteúdo sustentado de `[derivado]`. |
+| Auditoria, exceções e síntese final | Tier forte | Revisar apenas uma amostra definida, itens encaminhados pelos gates, conflitos e a síntese final. Não é o caminho padrão para todo o volume. |
+
+Um artefato pode avançar somente depois da execução local obrigatória e dos gates aplicáveis. Se o tier econômico produzir alteração sem suporte mecânico claro, reverter para a entrada revisável e encaminhar ao tier balanceado ou à revisão humana. A seleção concreta de um modelo é uma configuração substituível fora desta política; escolher capacidades compatíveis com privacidade, custo, volume e idioma do curso.
+
 ## Revisão
 
 Corrigir somente erros sustentados pelo áudio ou por grafia primária confirmada. Manter `[inaudível]`, `[?termo]`, `[ambíguo]`, `[referência visual perdida]` e `[lacuna de passos]` quando necessário.
