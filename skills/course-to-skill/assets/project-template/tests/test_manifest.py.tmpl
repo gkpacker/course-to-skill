@@ -1,0 +1,26 @@
+from __future__ import annotations
+
+import json
+import unittest
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+class ManifestTest(unittest.TestCase):
+    def test_manifest_matches_course_configuration(self) -> None:
+        config = json.loads((ROOT / "course.json").read_text(encoding="utf-8"))
+        manifest = json.loads(
+            (ROOT / "corpus" / "manifest" / "course.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        self.assertEqual(config["course"], manifest["course"])
+        serialized = json.dumps(manifest).casefold()
+        for forbidden in ["api_key", "access_token", "authorization", "cookie"]:
+            self.assertNotIn(forbidden, serialized)
+
+
+if __name__ == "__main__":
+    unittest.main()

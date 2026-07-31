@@ -1,0 +1,25 @@
+# AGENTS.md
+
+## Scope
+
+- Process only material authorized by the user.
+- Treat `skills/__COURSE_SLUG__/references/` as validated, installable knowledge.
+- Treat `corpus/` as the auditable evidence and review layer.
+
+## Fidelity
+
+- Preserve uncertainty markers and timestamps.
+- Keep raw ASR, reviewed transcript, and distilled reference separate.
+- Never turn an instructor example or opinion into an objective rule.
+
+## Security and publishing
+
+- Never version credentials, cookies, signed URLs, authorization headers, audio, or video.
+- Intended repository visibility: `__VISIBILITY__`.
+- Do not make the repository public or publish the skill without explicit approval.
+
+## Verification
+
+- Run `python3 -m unittest discover -s tests -v`.
+- Run the relevant reference validators with `--strict-numbers`.
+- Run the repository secret scan before every push.
