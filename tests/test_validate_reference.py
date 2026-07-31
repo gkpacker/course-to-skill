@@ -135,6 +135,19 @@ class ValidateReferenceTest(unittest.TestCase):
             any("numbers possibly missing" in error for error in result["errors"])
         )
 
+    def test_normalizes_spoken_number_scales(self) -> None:
+        transcript = "[00:01] Presente em mais de 40 mil restaurantes."
+        self.assertEqual(validate_reference.normalized_numbers(transcript), {"40000"})
+
+        lesson = valid_lesson().replace(
+            "**Conceito** — definição sustentada. [00:01–00:10]",
+            "**Escala** — presente em mais de 40.000 restaurantes. [00:01–00:10]",
+        )
+        result = validate_reference.validate(lesson, transcript, strict_numbers=True)
+        self.assertFalse(
+            any("numbers possibly missing" in error for error in result["errors"])
+        )
+
     def test_number_comparison_ignores_asr_metadata_and_alphanumeric_terms(self) -> None:
         transcript = """# Transcrição segmentada automática
 
