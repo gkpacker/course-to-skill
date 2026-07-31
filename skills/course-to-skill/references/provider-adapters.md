@@ -19,7 +19,7 @@ Adaptadores conectam uma plataforma autorizada ao pipeline genérico. Eles não 
 
 1. Usar navegador somente para autenticação, navegação e descoberta autorizada.
 2. Manter cookies, tokens, referers sensíveis e URLs assinadas em memória.
-3. Nunca imprimir argumentos que contenham credenciais.
+3. Entregar valores transitórios a processos locais por `stdin` ou descritor de arquivo; nunca por argumentos de processo, substituição de comando, variável impressa ou arquivo temporário versionável.
 4. Não persistir respostas de API que contenham segredos.
 5. Não contornar DRM, paywall ou limitação da plataforma.
 6. Tratar expiração de URL como estado normal e resolver novamente quando autorizado.

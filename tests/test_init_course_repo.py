@@ -63,6 +63,12 @@ class InitCourseRepoTest(unittest.TestCase):
         self.assertIn("one variable changed at a time", instructions)
         self.assertIn("semantic quality gate", instructions)
 
+    def test_scaffold_keeps_transient_credentials_out_of_process_arguments(self) -> None:
+        output = self.render("private")
+        instructions = (output / "AGENTS.md").read_text(encoding="utf-8")
+        self.assertIn("through stdin", instructions)
+        self.assertIn("never through process arguments or logs", instructions)
+
     def test_public_scaffold_excludes_course_content_by_default(self) -> None:
         output = self.render("public")
         config = json.loads((output / "course.json").read_text(encoding="utf-8"))

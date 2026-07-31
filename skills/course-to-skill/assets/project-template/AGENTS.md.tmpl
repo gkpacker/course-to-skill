@@ -23,6 +23,7 @@
 ## Security and publishing
 
 - Never version credentials, cookies, signed URLs, authorization headers, audio, or video.
+- Pass transient credentials and signed URLs to local adapters through stdin or an equivalent in-memory channel, never through process arguments or logs.
 - Intended repository visibility: `__VISIBILITY__`.
 - Do not make the repository public or publish the skill without explicit approval.
 
