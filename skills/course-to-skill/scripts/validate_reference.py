@@ -124,7 +124,8 @@ def normalized_numbers(text: str) -> set[str]:
         return rendered.rstrip("0").rstrip(".") if "." in rendered else rendered
 
     scrubbed = re.sub(
-        r"(\d+(?:[.,]\d+)?)\s+(mil|milhão|milhões|bilhão|bilhões)\b",
+        r"(\d+(?:[.,]\d+)?)(?:\+)?(?:\s+|\s*\|\s*)"
+        r"(mil|milhão|milhões|bilhão|bilhões)\b",
         expand_spoken_scale,
         scrubbed,
         flags=re.IGNORECASE,

@@ -148,6 +148,13 @@ class ValidateReferenceTest(unittest.TestCase):
             any("numbers possibly missing" in error for error in result["errors"])
         )
 
+    def test_normalizes_spoken_scales_split_across_markdown_table_cells(self) -> None:
+        text = "| exemplo | valuation | 1,4 | bilhão de dólares | [00:01] |"
+        self.assertIn("1400000000", validate_reference.normalized_numbers(text))
+
+        text = "| exemplo | faturamento | 100+ | milhões por ano | [00:01] |"
+        self.assertIn("100000000", validate_reference.normalized_numbers(text))
+
     def test_number_comparison_ignores_asr_metadata_and_alphanumeric_terms(self) -> None:
         transcript = """# Transcrição segmentada automática
 
