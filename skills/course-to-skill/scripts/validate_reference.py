@@ -6,6 +6,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from decimal import Decimal
 from pathlib import Path
 
 REQUIRED_HEADINGS = [
@@ -105,6 +106,27 @@ def normalized_numbers(text: str) -> set[str]:
     scrubbed = re.sub(
         r"(\d+(?:[.,]\d+)*)\s+vezes\b",
         r"\1x",
+        scrubbed,
+        flags=re.IGNORECASE,
+    )
+
+    scale_values = {
+        "mil": 1_000,
+        "milhão": 1_000_000,
+        "milhões": 1_000_000,
+        "bilhão": 1_000_000_000,
+        "bilhões": 1_000_000_000,
+    }
+
+    def expand_spoken_scale(match: re.Match[str]) -> str:
+        value = Decimal(match.group(1).replace(",", "."))
+        rendered = format(value * scale_values[match.group(2).casefold()], "f")
+        return rendered.rstrip("0").rstrip(".") if "." in rendered else rendered
+
+    scrubbed = re.sub(
+        r"(\d+(?:[.,]\d+)?)(?:\+)?(?:\s+|\s*\|\s*)"
+        r"(mil|milhão|milhões|bilhão|bilhões)\b",
+        expand_spoken_scale,
         scrubbed,
         flags=re.IGNORECASE,
     )

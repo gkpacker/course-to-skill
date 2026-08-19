@@ -11,7 +11,7 @@ Construir uma skill de conhecimento a partir de material de curso autorizado, ma
 
 - **Inicializar um projeto:** ler [repository-visibility.md](references/repository-visibility.md) e executar `scripts/init_course_repo.py`.
 - **Inventariar ou processar aulas:** ler [pipeline.md](references/pipeline.md), [manifest-schema.md](references/manifest-schema.md) e [provider-adapters.md](references/provider-adapters.md).
-- **Revisar e destilar:** ler [lesson-template.md](references/lesson-template.md) e [quality-gates.md](references/quality-gates.md).
+- **Revisar e destilar:** ler [pipeline.md](references/pipeline.md), [lesson-template.md](references/lesson-template.md) e [quality-gates.md](references/quality-gates.md).
 - **Organizar o resultado:** usar [project-layout.md](references/project-layout.md).
 
 ## Processar uma aula
@@ -26,6 +26,10 @@ Construir uma skill de conhecimento a partir de material de curso autorizado, ma
 8. Validar com `scripts/validate_reference.py --strict-numbers`.
 9. Copiar somente referências aprovadas para a skill de conhecimento gerada.
 10. Atualizar o índice `problema → referência` e o estado do manifesto.
+
+## Roteamento de modelos
+
+Aplicar a política em [pipeline.md](references/pipeline.md): mídia, ASR e validação determinística permanecem locais; usar o tier econômico somente para limpeza mecânica de alto volume, o tier balanceado para revisão e destilação, e o tier forte para auditoria amostral, exceções e síntese final. Não substituir os gates estruturais e semânticos por julgamento do modelo. Calibrar alterações seguindo o protocolo A/B em [quality-gates.md](references/quality-gates.md).
 
 ## Inicializar um repositório de curso
 

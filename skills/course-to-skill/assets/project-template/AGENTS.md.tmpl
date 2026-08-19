@@ -12,9 +12,18 @@
 - Keep raw ASR, reviewed transcript, and distilled reference separate.
 - Never turn an instructor example or opinion into an objective rule.
 
+## Model routing
+
+- Keep media handling, ASR, and structural validation local and deterministic.
+- Use an economical capability tier only for high-volume mechanical cleanup that does not alter meaning or uncertainty.
+- Use a balanced tier for evidence-aware transcript review and lesson distillation.
+- Reserve a strong tier for sampled audits, exceptions, and final synthesis; it is not the default path for every lesson.
+- Do not let a model override a deterministic validator or semantic quality gate. When changing routing, calibrate A/B with one variable changed at a time and record the gate outcomes.
+
 ## Security and publishing
 
 - Never version credentials, cookies, signed URLs, authorization headers, audio, or video.
+- Pass transient credentials and signed URLs to local adapters through stdin or an equivalent in-memory channel, never through process arguments or logs.
 - Intended repository visibility: `__VISIBILITY__`.
 - Do not make the repository public or publish the skill without explicit approval.
 
